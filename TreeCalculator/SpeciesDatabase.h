@@ -15,6 +15,7 @@ struct TreeRecord {
     double heightM = 0.0;
     double formFactor = 0.0;
     double volumeM3 = 0.0;
+    double pricePerM3 = 0.0;
     QDateTime createdAt;
 };
 
@@ -27,7 +28,7 @@ public:
     // Справочник пород
     QStringList speciesList() const;
     double formFactor(const QString &speciesName) const;
-    bool addSpecies(const QString &name, double formFactor);
+    bool addSpecies(const QString &name, double formFactor, double price);
     bool removeSpecies(const QString &name);
 
     // Работа с записями ведомости
@@ -37,8 +38,12 @@ public:
     double totalVolume() const;
 
     // Для изменения пород
-    bool updateSpecies(const QString &oldName, const QString &newName, double formFactor);
+    bool updateSpeciesFull(const QString &oldName, const QString &newName, double formFactor, double price);
     void resetToDefaults();
+
+    // пОлучение цены
+    double pricePerCubic(const QString &speciesName) const;
+    double totalPrice() const;
 
 private:
     void initializeDatabase();

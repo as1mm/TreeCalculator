@@ -1,6 +1,7 @@
 #include "speciesdialog.h"
 #include "ui_speciesdialog.h"
 #include <QMessageBox>
+#include <QInputDialog>
 
 SpeciesDialog::SpeciesDialog(SpeciesDatabase *db, QWidget *parent) :
     QDialog(parent),
@@ -10,8 +11,8 @@ SpeciesDialog::SpeciesDialog(SpeciesDatabase *db, QWidget *parent) :
     ui->setupUi(this);
 
     // Настройка таблицы
-    ui->tblSpecies->setColumnCount(2);
-    QStringList headers = { "Название", "Видовое число" };
+    ui->tblSpecies->setColumnCount(3);
+    QStringList headers = { "Название", "Видовое число", "Цена за м³" };
     ui->tblSpecies->setHorizontalHeaderLabels(headers);
     ui->tblSpecies->horizontalHeader()->setStretchLastSection(true);
     ui->tblSpecies->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -56,36 +57,34 @@ void SpeciesDialog::loadSpeciesTable() {
         QTableWidgetItem *factorItem = new QTableWidgetItem(QString::number(f, 'f', 2));
         factorItem->setFlags(factorItem->flags() | Qt::ItemIsEditable);
         ui->tblSpecies->setItem(row, 1, factorItem);
+
+        // Цена за куб
+        double price = m_db->pricePerCubic(name);
+        QTableWidgetItem *priceItem = new QTableWidgetItem(QString::number(price, 'f', 2));
+        priceItem->setFlags(priceItem->flags() | Qt::ItemIsEditable);
+        ui->tblSpecies->setItem(row, 2, priceItem);
     }
     ui->tblSpecies->blockSignals(false);
 }
 
 void SpeciesDialog::btnAdd_clicked() {
-    // Добавляем пустую строку в таблицу и сразу сохраняем в БД
-    int row = ui->tblSpecies->rowCount();
-    ui->tblSpecies->insertRow(row);
+    bool ok;
+    QString name = QInputDialog::getText(this, "Новая порода", "Название:", QLineEdit::Normal, "", &ok);
+    if (!ok || name.trimmed().isEmpty()) return;
 
-    QString newName = "Новая порода";
-    double newFactor = 0.50;
+    double factor = QInputDialog::getDouble(this, "Новая порода", "Видовое число (0.01–1.00):", 0.50, 0.01, 1.00, 2, &ok);
+    if (!ok) return;
 
-    // Пытаемся добавить в БД
-    if (!m_db->addSpecies(newName, newFactor)) {
-        // Если не удалось (например, уже есть), сообщим и удалим строку
+    double price = QInputDialog::getDouble(this, "Новая порода", "Цена за кубометр (руб.):", 0.0, 0.0, 1000000.0, 2, &ok);
+    if (!ok) return;
+
+    if (!m_db->addSpecies(name, factor, price)) {
         QMessageBox::warning(this, "Ошибка", "Не удалось добавить породу. Возможно, такое имя уже существует.");
-        ui->tblSpecies->removeRow(row);
         return;
     }
 
-    // Создаём элементы (сигналы временно блокируем, чтобы не вызвать onCellChanged)
     ui->tblSpecies->blockSignals(true);
-    QTableWidgetItem *nameItem = new QTableWidgetItem(newName);
-    nameItem->setFlags(nameItem->flags() | Qt::ItemIsEditable);
-    nameItem->setData(Qt::UserRole, newName);
-    ui->tblSpecies->setItem(row, 0, nameItem);
-
-    QTableWidgetItem *factorItem = new QTableWidgetItem(QString::number(newFactor, 'f', 2));
-    factorItem->setFlags(factorItem->flags() | Qt::ItemIsEditable);
-    ui->tblSpecies->setItem(row, 1, factorItem);
+    loadSpeciesTable();
     ui->tblSpecies->blockSignals(false);
 
     emit speciesChanged();
@@ -108,6 +107,7 @@ void SpeciesDialog::btnDelete_clicked() {
         ui->tblSpecies->blockSignals(true);
         ui->tblSpecies->removeRow(row);
         ui->tblSpecies->blockSignals(false);
+
         emit speciesChanged();
     }
 }
@@ -128,19 +128,28 @@ void SpeciesDialog::cellChanged(int row, int column) {
     // Получаем текущие данные из ячеек
     QTableWidgetItem *nameItem = ui->tblSpecies->item(row, 0);
     QTableWidgetItem *factorItem = ui->tblSpecies->item(row, 1);
-    if (!nameItem || !factorItem) return;
+    QTableWidgetItem *priceItem  = ui->tblSpecies->item(row, 2);
+
+    if (!nameItem || !factorItem || !priceItem) return;
 
     QString newName = nameItem->text().trimmed();
     if (newName.isEmpty()) {
         QMessageBox::warning(this, "Ошибка", "Название породы не может быть пустым.");
-        loadSpeciesTable(); // откатить несохранённое изменение
+        loadSpeciesTable(); // откатываем несохранённые изменения
         return;
     }
 
-    bool ok;
-    double newFactor = factorItem->text().toDouble(&ok);
-    if (!ok || newFactor <= 0.0 || newFactor > 1.0) {
-        QMessageBox::warning(this, "Ошибка", "Видовое число должно быть числом от 0.01 до 1.00.");
+    bool okFactor, okPrice;
+    double newFactor = factorItem->text().toDouble(&okFactor);
+    double newPrice  = priceItem->text().toDouble(&okPrice);
+
+    if (!okFactor || newFactor <= 0.0 || newFactor > 1.0) {
+        QMessageBox::warning(this, "Ошибка", "Видовое число должно быть от 0.01 до 1.00.");
+        loadSpeciesTable();
+        return;
+    }
+    if (!okPrice || newPrice < 0.0) {
+        QMessageBox::warning(this, "Ошибка", "Цена не может быть отрицательной.");
         loadSpeciesTable();
         return;
     }
@@ -155,9 +164,9 @@ void SpeciesDialog::cellChanged(int row, int column) {
     }
 
     // Обновляем запись в БД
-    if (!m_db->updateSpecies(oldName, newName, newFactor)) {
+    if (!m_db->updateSpeciesFull(oldName, newName, newFactor, newPrice)) {
         QMessageBox::warning(this, "Ошибка", "Не удалось сохранить изменения. Возможно, порода с таким именем уже существует.");
-        loadSpeciesTable(); // откатить
+        loadSpeciesTable(); // откат
         return;
     }
 
@@ -166,7 +175,9 @@ void SpeciesDialog::cellChanged(int row, int column) {
     nameItem->setData(Qt::UserRole, newName);
     // Также обновим значение видового числа на случай, если в БД произошло округление
     double savedFactor = m_db->formFactor(newName);
+    double savedPrice  = m_db->pricePerCubic(newName);
     factorItem->setText(QString::number(savedFactor, 'f', 2));
+    priceItem->setText (QString::number(savedPrice,  'f', 2));
     ui->tblSpecies->blockSignals(false);
 
     emit speciesChanged();

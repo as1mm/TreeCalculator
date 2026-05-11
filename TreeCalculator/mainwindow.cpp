@@ -50,8 +50,8 @@ MainWindow::MainWindow(QWidget *parent)
     // Заполняем комбобокс породами из БД
     ui->cmbSpecies->addItems(m_database.speciesList());
 
-    ui->tblRecords->setColumnCount(6);
-    QStringList headers = {"Порода", "Диам., см", "Выс., м", "Вид.число", "Объём, м³", "Дата"};
+    ui->tblRecords->setColumnCount(8);
+    QStringList headers = {"Порода", "Диам., см", "Выс., м", "Вид.число", "Объём, м³", "Цена/м³", "Стоимость", "Дата"};
     ui->tblRecords->setHorizontalHeaderLabels(headers);
     ui->tblRecords->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tblRecords->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -86,28 +86,33 @@ void MainWindow::btnCalculate_clicked() {
 }
 
 void MainWindow::btnAddToReport_clicked() {
-    // Считываем то же, что и при расчёте
     QString species = ui->cmbSpecies->currentText();
     double f = m_database.formFactor(species);
-    if (f <= 0.0) {
-        QMessageBox::warning(this, "Ошибка", "Неизвестная порода.");
-        return;
-    }
+    if (f <= 0.0) { /* ошибка */ return; }
     double d = ui->sbDiameter->value();
     double h = ui->sbHeight->value();
     double volume = TreeVolumeCalculator::calculateVolume(d, h, f);
 
+    double price = m_database.pricePerCubic(species);
+    if (price <= 0.0) {
+        // Можно предупредить, но не запрещать, или спросить цену
+        QMessageBox::StandardButton btn = QMessageBox::question(this, "Цена не задана",
+                                         "Для породы '" + species + "' не указана цена за кубометр. Продолжить с нулевой ценой?");
+        if (btn != QMessageBox::Yes) return;
+    }
+
     TreeRecord rec;
-    rec.species    = species;
+    rec.species = species;
     rec.diameterCm = d;
-    rec.heightM    = h;
+    rec.heightM = h;
     rec.formFactor = f;
-    rec.volumeM3   = volume;
+    rec.volumeM3 = volume;
+    rec.pricePerM3 = price;
 
     if (m_database.addTreeRecord(rec)) {
         updateTable();
     } else {
-        QMessageBox::critical(this, "Ошибка", "Не удалось добавить запись в базу данных.");
+        QMessageBox::critical(this, "Ошибка", "Не удалось добавить запись.");
     }
 }
 
@@ -140,17 +145,22 @@ void MainWindow::updateTable() {
         QTableWidgetItem *itemSpecies = new QTableWidgetItem(r.species);
         itemSpecies->setData(Qt::UserRole, r.id);  // кладём ID
         ui->tblRecords->setItem(i, 0, itemSpecies);
-
         ui->tblRecords->setItem(i, 1, new QTableWidgetItem(QString::number(r.diameterCm, 'f', 1)));
         ui->tblRecords->setItem(i, 2, new QTableWidgetItem(QString::number(r.heightM, 'f', 1)));
         ui->tblRecords->setItem(i, 3, new QTableWidgetItem(QString::number(r.formFactor, 'f', 2)));
         ui->tblRecords->setItem(i, 4, new QTableWidgetItem(QString::number(r.volumeM3, 'f', 4)));
-        ui->tblRecords->setItem(i, 5, new QTableWidgetItem(r.createdAt.toString("yyyy-MM-dd hh:mm")));
+        ui->tblRecords->setItem(i, 5, new QTableWidgetItem(QString::number(r.pricePerM3, 'f', 2)));
+        double cost = r.volumeM3 * r.pricePerM3;
+        ui->tblRecords->setItem(i, 6, new QTableWidgetItem(QString::number(cost, 'f', 2)));
+        ui->tblRecords->setItem(i, 7, new QTableWidgetItem(r.createdAt.toString("yyyy-MM-dd hh:mm")));
     }
 
-    // Обновляем сумму
-    double total = m_database.totalVolume();
-    ui->lblTotal->setText(QString("Общий объём: %1 м³").arg(total, 0, 'f', 4));
+    // Обновляем итоговый объем и стоимость
+    double totalVol = m_database.totalVolume();
+    double totalCost = m_database.totalPrice();
+    ui->lblTotal->setText(QString("Общий объём: %1 м³ | Общая стоимость: %2 руб.")
+                          .arg(totalVol, 0, 'f', 4)
+                          .arg(totalCost, 0, 'f', 2));
 }
 
 void MainWindow::btnSettings_clicked() {
