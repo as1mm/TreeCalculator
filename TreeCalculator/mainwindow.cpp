@@ -7,6 +7,10 @@
 #include <QApplication>
 #include <QStyleFactory>
 #include <QPalette>
+#include "stockdialog.h"
+#include "customersdialog.h"
+#include "ordersdialog.h"
+#include "orderdetaildialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -46,6 +50,36 @@ MainWindow::MainWindow(QWidget *parent)
                 );
     connect(editSpeciesAction, &QAction::triggered, this, &MainWindow::btnSettings_clicked);
 
+    // Меню "Склад"
+    QMenu *warehouseMenu = menuBar()->addMenu(tr("Склад"));
+    QAction *openStockAction = warehouseMenu->addAction(
+                QIcon(":/icons/garage_.png"),
+                tr("Склад пиломатериалов")
+                );
+    connect(openStockAction, &QAction::triggered, this, [this]() {
+        StockDialog dlg(&m_database, this);
+        dlg.exec();
+    });
+
+    QAction *openCustomersAction = warehouseMenu->addAction(
+                QIcon(":/icons/person_.png"),
+                tr("Заказчики")
+                );
+    connect(openCustomersAction, &QAction::triggered, this, [this]() {
+        CustomersDialog dlg(&m_database, this);
+        dlg.exec();
+    });
+
+    // Меню "Заказы"
+    QMenu *ordersMenu = menuBar()->addMenu(tr("Заказы"));
+    QAction *openOrdersAction = ordersMenu->addAction(
+                QIcon(":/icons/shopping_cart_.png"),
+                tr("Список заказов")
+                );
+    connect(openOrdersAction, &QAction::triggered, this, [this]() {
+        OrdersDialog dlg(&m_database, this);
+        dlg.exec();
+    });
 
     // Заполняем комбобокс породами из БД
     ui->cmbSpecies->addItems(m_database.speciesList());

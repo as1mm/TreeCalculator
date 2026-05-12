@@ -3,5 +3,8 @@
         <file>delete_.png</file>
         <file>add_.png</file>
         <file>instrument_.png</file>
+        <file>garage_.png</file>
+        <file>person_.png</file>
+        <file>shopping_cart_.png</file>
     </qresource>
 </RCC>

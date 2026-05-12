@@ -12,19 +12,31 @@ CONFIG += c++20
 SOURCES += \
     SpeciesDatabase.cpp \
     TreeVolumeCalculator.cpp \
+    customersdialog.cpp \
     main.cpp \
     mainwindow.cpp \
-    speciesdialog.cpp
+    orderdetaildialog.cpp \
+    ordersdialog.cpp \
+    speciesdialog.cpp \
+    stockdialog.cpp
 
 HEADERS += \
     SpeciesDatabase.h \
     TreeVolumeCalculator.h \
+    customersdialog.h \
     mainwindow.h \
-    speciesdialog.h
+    orderdetaildialog.h \
+    ordersdialog.h \
+    speciesdialog.h \
+    stockdialog.h
 
 FORMS += \
+    customersdialog.ui \
     mainwindow.ui \
-    speciesdialog.ui
+    orderdetaildialog.ui \
+    ordersdialog.ui \
+    speciesdialog.ui \
+    stockdialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
