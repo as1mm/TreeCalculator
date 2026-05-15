@@ -18,6 +18,19 @@ OrdersDialog::OrdersDialog(SpeciesDatabase *db, QWidget *parent) :
 {
     ui->setupUi(this);
 
+    // Лейауты (для того, чтобы кнопки и таблицы растягивались при увеличении окна)
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    mainLayout->addWidget(ui->tblOrders);
+    QHBoxLayout *btnLayout = new QHBoxLayout();
+    btnLayout->addWidget(ui->btnCreate);
+    btnLayout->addWidget(ui->btnOpen);
+    btnLayout->addWidget(ui->btnDelete);
+    btnLayout->addStretch();
+    btnLayout->addWidget(ui->btnClose);
+    mainLayout->addLayout(btnLayout);
+    ui->tblOrders->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+    // Настройка таблицы
     ui->tblOrders->setColumnCount(4);
     QStringList headers = {"ID", "Заказчик", "Дата", "Статус"};
     ui->tblOrders->setHorizontalHeaderLabels(headers);

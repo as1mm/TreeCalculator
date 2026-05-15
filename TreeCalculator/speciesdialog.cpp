@@ -2,6 +2,8 @@
 #include "ui_speciesdialog.h"
 #include <QMessageBox>
 #include <QInputDialog>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 
 SpeciesDialog::SpeciesDialog(SpeciesDatabase *db, QWidget *parent) :
     QDialog(parent),
@@ -9,6 +11,17 @@ SpeciesDialog::SpeciesDialog(SpeciesDatabase *db, QWidget *parent) :
     m_db(db)
 {
     ui->setupUi(this);
+
+    // Лейауты (для того, чтобы кнопки и таблицы растягивались при увеличении окна)
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    mainLayout->addWidget(ui->tblSpecies);
+    QHBoxLayout *btnLayout = new QHBoxLayout();
+    btnLayout->addWidget(ui->btnAdd);
+    btnLayout->addWidget(ui->btnDelete);
+    btnLayout->addStretch();
+    btnLayout->addWidget(ui->btnReset);
+    mainLayout->addLayout(btnLayout);
+    ui->tblSpecies->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     // Настройка таблицы
     ui->tblSpecies->setColumnCount(3);

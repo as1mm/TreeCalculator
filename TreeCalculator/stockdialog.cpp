@@ -10,6 +10,17 @@ StockDialog::StockDialog(SpeciesDatabase *db, QWidget *parent) :
 {
     ui->setupUi(this);
 
+    // Лейауты (для того, чтобы кнопки и таблицы растягивались при увеличении окна)
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    mainLayout->addWidget(ui->tblStock);
+    QHBoxLayout *btnLayout = new QHBoxLayout();
+    btnLayout->addWidget(ui->btnAdd);
+    btnLayout->addWidget(ui->btnDelete);
+    btnLayout->addStretch();
+    btnLayout->addWidget(ui->btnClose);
+    mainLayout->addLayout(btnLayout);
+    ui->tblStock->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
     // Настройка таблицы
     ui->tblStock->setColumnCount(9);
     QStringList headers = {"ID", "Порода", "Тип", "Длина, мм", "Ширина, мм", "Толщина, мм",

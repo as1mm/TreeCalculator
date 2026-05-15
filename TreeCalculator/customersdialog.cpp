@@ -9,6 +9,19 @@ CustomersDialog::CustomersDialog(SpeciesDatabase *db, QWidget *parent) :
     m_db(db)
 {
     ui->setupUi(this);
+
+    // Лейауты (для того, чтобы кнопки и таблицы растягивались при увеличении окна)
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    mainLayout->addWidget(ui->tblCustomers);
+    QHBoxLayout *btnLayout = new QHBoxLayout();
+    btnLayout->addWidget(ui->btnAdd);
+    btnLayout->addWidget(ui->btnDelete);
+    btnLayout->addStretch();
+    btnLayout->addWidget(ui->btnClose);
+    mainLayout->addLayout(btnLayout);
+    ui->tblCustomers->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+    // Настройки таблицы
     ui->tblCustomers->setColumnCount(4);
     ui->tblCustomers->setHorizontalHeaderLabels({"ID", "Название", "Город", "Адрес"});
     ui->tblCustomers->setColumnHidden(0, true);

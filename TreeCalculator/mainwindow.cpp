@@ -11,12 +11,44 @@
 #include "customersdialog.h"
 #include "ordersdialog.h"
 #include "orderdetaildialog.h"
+#include <QVBoxLayout>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    // Лейауты (для того, чтобы кнопки и таблицы растягивались при увеличении окна)
+    // Центральный виджет
+    QWidget *central = new QWidget(this);
+    setCentralWidget(central);
+    // Главный вертикальный Layout
+    QVBoxLayout *mainLayout = new QVBoxLayout(central);
+    mainLayout->setSpacing(5);
+    mainLayout->setContentsMargins(5, 5, 5, 5);
+    // Верхняя панель (ввод)
+    QHBoxLayout *topPanel = new QHBoxLayout();
+    topPanel->addWidget(new QLabel("Порода:"));
+    topPanel->addWidget(ui->cmbSpecies);
+    topPanel->addWidget(new QLabel("Диаметр, см:"));
+    topPanel->addWidget(ui->sbDiameter);
+    topPanel->addWidget(new QLabel("Высота, м:"));
+    topPanel->addWidget(ui->sbHeight);
+    topPanel->addWidget(ui->btnCalculate);
+    topPanel->addWidget(ui->lblResult);
+    topPanel->addStretch();
+    mainLayout->addLayout(topPanel);
+    // Таблица
+    mainLayout->addWidget(ui->tblRecords, 1);
+    ui->tblRecords->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    // Нижняя панель (кнопки + итог)
+    QHBoxLayout *bottomPanel = new QHBoxLayout();
+    bottomPanel->addWidget(ui->btnAddToReport);
+    bottomPanel->addWidget(ui->btnDeleteRecord);
+    bottomPanel->addStretch();
+    bottomPanel->addWidget(ui->lblTotal);
+    mainLayout->addLayout(bottomPanel);
 
     // Меняем стиль
     qApp->setStyle(QStyleFactory::create("Fusion"));

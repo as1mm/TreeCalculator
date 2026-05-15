@@ -12,6 +12,20 @@ OrderDetailDialog::OrderDetailDialog(SpeciesDatabase *db, int orderId, QWidget *
 {
     ui->setupUi(this);
 
+    // Лейауты (для того, чтобы кнопки и таблицы растягивались при увеличении окна)
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    mainLayout->addWidget(ui->lblCustomerInfo);
+    mainLayout->addWidget(ui->tblItems);
+    QHBoxLayout *btnLayout = new QHBoxLayout();
+    btnLayout->addWidget(ui->btnAddItem);
+    btnLayout->addWidget(ui->btnDeleteItem);
+    btnLayout->addWidget(ui->btnAllocate);
+    //btnLayout->addWidget(ui->btnSummary);   // если уже добавлена кнопка «Сводка»
+    btnLayout->addStretch();
+    btnLayout->addWidget(ui->btnClose);
+    mainLayout->addLayout(btnLayout);
+    ui->tblItems->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
     // Заголовок с информацией о заказчике
     QVector<Order> orders = m_db->allOrders();
     Customer c;
