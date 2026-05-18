@@ -52,8 +52,8 @@ MainWindow::MainWindow(QWidget *parent)
     topPanel->setSpacing(12);
     topPanel->setContentsMargins(20, 20, 20, 20);
     QLabel *speciesLabel = new QLabel("Порода");
-    QLabel *diameterLabel = new QLabel("Диаметр");
-    QLabel *heightLabel = new QLabel("Высота");
+    QLabel *diameterLabel = new QLabel("Диаметр, см.");
+    QLabel *heightLabel = new QLabel("Высота, м.");
     speciesLabel->setMinimumWidth(70);
     diameterLabel->setMinimumWidth(70);
     heightLabel->setMinimumWidth(70);
