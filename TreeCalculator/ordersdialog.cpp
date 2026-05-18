@@ -18,6 +18,8 @@ OrdersDialog::OrdersDialog(SpeciesDatabase *db, QWidget *parent) :
 {
     ui->setupUi(this);
 
+    setWindowTitle("Заказы");
+
     // Лейауты (для того, чтобы кнопки и таблицы растягивались при увеличении окна)
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->addWidget(ui->tblOrders);

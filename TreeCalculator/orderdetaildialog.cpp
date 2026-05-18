@@ -12,6 +12,8 @@ OrderDetailDialog::OrderDetailDialog(SpeciesDatabase *db, int orderId, QWidget *
 {
     ui->setupUi(this);
 
+    setWindowTitle("Детали заказа");
+
     // Лейауты (для того, чтобы кнопки и таблицы растягивались при увеличении окна)
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->addWidget(ui->lblCustomerInfo);

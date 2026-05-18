@@ -10,6 +10,8 @@ StockDialog::StockDialog(SpeciesDatabase *db, QWidget *parent) :
 {
     ui->setupUi(this);
 
+    setWindowTitle("Склад");
+
     // Лейауты (для того, чтобы кнопки и таблицы растягивались при увеличении окна)
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->addWidget(ui->tblStock);

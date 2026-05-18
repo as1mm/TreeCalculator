@@ -8,6 +8,7 @@ debug/ordersdialog.o
 debug/speciesdialog.o
 debug/stockdialog.o
 debug/qrc_icons.o
+debug/qrc_style.o
 debug/moc_customersdialog.o
 debug/moc_mainwindow.o
 debug/moc_orderdetaildialog.o

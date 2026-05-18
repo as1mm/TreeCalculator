@@ -1,0 +1,498 @@
+/* =========================================================
+   GLOBAL
+   ========================================================= */
+
+QMainWindow,
+QDialog,
+QFrame,
+QTableWidget,
+QMenuBar,
+QMenu,
+QGroupBox {
+    background-color: #121417;
+}
+
+QWidget {
+    color: #E6EAF0;
+    font-family: "Segoe UI";
+    font-size: 14px;
+}
+
+QWidget#centralwidget {
+    background-color: #121417;
+}
+
+QComboBox,
+QLineEdit {
+    background-color: #1B1F24;
+    color: white;
+    border: 1px solid #2F3842;
+    border-radius: 10px;
+    padding: 6px 10px;
+    min-height: 30px;
+}
+
+/* =========================================================
+   MENU BAR
+   ========================================================= */
+
+QMenuBar {
+    background-color: #171A1F;
+    color: white;
+    border-bottom: 1px solid #2B3138;
+    padding: 4px;
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 8px 12px;
+    border-radius: 8px;
+}
+
+QMenuBar::item:selected {
+    background-color: #2D333B;
+}
+
+QMenu {
+    background-color: #171A1F;
+    color: white;
+    border: 1px solid #2B3138;
+    padding: 6px;
+}
+
+QMenu::item {
+    padding: 8px 18px;
+    border-radius: 6px;
+}
+
+QMenu::item:selected {
+    background-color: #2E8B57;
+}
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+QLabel#titleLabel {
+    font-size: 28px;
+    font-weight: 700;
+    color: white;
+}
+
+/* =========================================================
+   TOOLBAR CARD
+   ========================================================= */
+
+QFrame#toolbarCard {
+    background-color: #171A1F;
+    border: 1px solid #2B3138;
+    border-radius: 18px;
+}
+
+/* =========================================================
+   LABELS
+   ========================================================= */
+
+QLabel {
+    background: transparent;
+}
+
+QLabel#resultLabel {
+    color: #53D18B;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* =========================================================
+   INPUTS
+   ========================================================= */
+
+QComboBox,
+QSpinBox,
+QDoubleSpinBox,
+QLineEdit {
+    background-color: #1B1F24;
+    color: white;
+    border: 1px solid #2F3842;
+    border-radius: 10px;
+    padding: 6px 10px;
+    min-height: 30px;
+}
+
+QComboBox:hover,
+QSpinBox:hover,
+QDoubleSpinBox:hover,
+QLineEdit:hover {
+    border: 1px solid #3A4552;
+}
+
+QComboBox:focus,
+QSpinBox:focus,
+QDoubleSpinBox:focus,
+QLineEdit:focus {
+    border: 1px solid #2E8B57;
+}
+
+/* dropdown */
+
+QComboBox::drop-down {
+    border: none;
+    width: 24px;
+    background: transparent;
+}
+
+/* =========================================================
+   DATE EDIT
+   ========================================================= */
+
+QDateEdit {
+    background-color: #1B1F24;
+    color: white;
+
+    border: 1px solid #2F3842;
+    border-radius: 10px;
+
+    padding: 6px 10px;
+
+    min-height: 30px;
+}
+
+QDateEdit:hover {
+    border: 1px solid #3A4552;
+}
+
+QDateEdit:focus {
+    border: 1px solid #2E8B57;
+}
+
+/* button справа */
+
+QDateEdit::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+
+    width: 24px;
+
+    border-left: 1px solid #2F3842;
+
+    background-color: #252A31;
+
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+/* убрать ugly arrow */
+
+QDateEdit::down-arrow {
+    image: none;
+}
+
+/* =========================================================
+   CALENDAR
+   ========================================================= */
+
+QCalendarWidget QWidget {
+    background-color: #171A1F;
+    color: white;
+}
+
+/* верхняя панель */
+
+QCalendarWidget QToolButton {
+    background-color: #252A31;
+    color: white;
+
+    border: none;
+    border-radius: 8px;
+
+    padding: 6px;
+
+    margin: 4px;
+}
+
+QCalendarWidget QToolButton:hover {
+    background-color: #313843;
+}
+
+/* navigation arrows */
+
+QCalendarWidget QToolButton#qt_calendar_prevmonth,
+QCalendarWidget QToolButton#qt_calendar_nextmonth {
+    min-width: 24px;
+    min-height: 24px;
+}
+
+/* month/year area */
+
+QCalendarWidget QMenu {
+    background-color: #171A1F;
+    color: white;
+}
+
+/* table */
+
+QCalendarWidget QTableView {
+    background-color: #171A1F;
+
+    alternate-background-color: #1D2128;
+
+    color: white;
+
+    selection-background-color: #2E8B57;
+
+    selection-color: white;
+
+    border: none;
+
+    outline: 0;
+}
+
+/* headers */
+
+QCalendarWidget QHeaderView::section {
+    background-color: #20252C;
+    color: #9BA7B4;
+
+    padding: 6px;
+
+    border: none;
+}
+
+/* =========================================================
+   SPINBOX
+   ========================================================= */
+
+QSpinBox,
+QDoubleSpinBox {
+    background-color: #1B1F24;
+    color: white;
+
+    border: 1px solid #2F3842;
+    border-radius: 10px;
+
+    padding-left: 10px;
+    padding-right: 28px;
+
+    min-height: 34px;
+}
+
+QSpinBox:hover,
+QDoubleSpinBox:hover {
+    border: 1px solid #3A4552;
+}
+
+QSpinBox:focus,
+QDoubleSpinBox:focus {
+    border: 1px solid #2E8B57;
+}
+
+/* UP BUTTON */
+
+QSpinBox::up-button,
+QDoubleSpinBox::up-button {
+    subcontrol-origin: border;
+    subcontrol-position: top right;
+
+    width: 22px;
+
+    border-left: 1px solid #2F3842;
+    border-top-right-radius: 9px;
+
+    background-color: #252A31;
+}
+
+/* DOWN BUTTON */
+
+QSpinBox::down-button,
+QDoubleSpinBox::down-button {
+    subcontrol-origin: border;
+    subcontrol-position: bottom right;
+
+    width: 22px;
+
+    border-left: 1px solid #2F3842;
+    border-bottom-right-radius: 9px;
+
+    background-color: #252A31;
+}
+
+QSpinBox::up-button:hover,
+QDoubleSpinBox::up-button:hover,
+QSpinBox::down-button:hover,
+QDoubleSpinBox::down-button:hover {
+    background-color: #313843;
+}
+
+QSpinBox::up-button,
+QDoubleSpinBox::up-button,
+QSpinBox::down-button,
+QDoubleSpinBox::down-button {
+    color: white;
+}
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+QPushButton {
+    background-color: #2E8B57;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 18px;
+    font-weight: 600;
+    min-height: 22px;
+}
+
+QPushButton:hover {
+    background-color: #37A165;
+}
+
+QPushButton:pressed {
+    background-color: #256E46;
+}
+
+QPushButton#dangerButton {
+    background-color: #D64545;
+}
+
+QPushButton#dangerButton:hover {
+    background-color: #EE5555;
+}
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+QTableWidget {
+    background-color: #171A1F;
+    color: white;
+    border: 1px solid #2B3138;
+    border-radius: 16px;
+    gridline-color: #252A31;
+    alternate-background-color: #1D2128;
+    selection-background-color: #2E8B57;
+    padding: 8px;
+}
+
+QTableWidget::item {
+    background-color: #171A1F;
+    color: white;
+    padding: 8px;
+    border: none;
+}
+
+QTableWidget::item:selected {
+    background-color: #2E8B57;
+    color: white;
+}
+
+QHeaderView::section {
+    background-color: #20252C;
+    color: white;
+    border: none;
+    padding: 12px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+QScrollBar:vertical {
+    background: #171A1F;
+    width: 12px;
+    margin: 0px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical {
+    background: #39424D;
+    min-height: 30px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #4A5563;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    height: 0px;
+    background: none;
+    border: none;
+}
+
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical {
+    background: transparent;
+}
+
+/* =========================================================
+   GROUP BOX
+   ========================================================= */
+
+QGroupBox {
+    border: 1px solid #2B3138;
+    border-radius: 16px;
+    margin-top: 12px;
+    padding: 16px;
+    background-color: #171A1F;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 12px;
+    padding: 0 6px;
+    color: #9BA7B4;
+}
+
+/* =========================================================
+   STATUS / TOTAL LABELS
+   ========================================================= */
+
+QLabel#totalLabel {
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+}
+
+
+/* =========================================================
+   HORIZONTAL SCROLLBAR
+   ========================================================= */
+
+QScrollBar:horizontal {
+    background: #171A1F;
+    height: 12px;
+    margin: 0px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:horizontal {
+    background: #39424D;
+    min-width: 30px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: #4A5563;
+}
+
+QScrollBar::add-line:horizontal,
+QScrollBar::sub-line:horizontal {
+    width: 0px;
+    background: none;
+    border: none;
+}
+
+QScrollBar::add-page:horizontal,
+QScrollBar::sub-page:horizontal {
+    background: transparent;
+}
+
+QTableCornerButton::section {
+    background-color: #171A1F;
+    border: none;
+}

@@ -8,6 +8,7 @@ release/ordersdialog.o
 release/speciesdialog.o
 release/stockdialog.o
 release/qrc_icons.o
+release/qrc_style.o
 release/moc_customersdialog.o
 release/moc_mainwindow.o
 release/moc_orderdetaildialog.o

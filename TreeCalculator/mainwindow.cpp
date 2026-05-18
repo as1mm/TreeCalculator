@@ -17,31 +17,84 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    // красота
     ui->setupUi(this);
+    ui->tblRecords->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    ui->tblRecords->horizontalHeader()->setMinimumHeight(42);
+    ui->tblRecords->setIconSize(QSize(20, 20));
+
+    // немножко красоты
+    setWindowTitle("TreeCalculator");
+    resize(1400, 850);
+    ui->tblRecords->setAlternatingRowColors(true);
+    ui->tblRecords->verticalHeader()->setVisible(false);
+    ui->tblRecords->setShowGrid(false);
+    ui->tblRecords->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->tblRecords->setFocusPolicy(Qt::NoFocus);
+    ui->btnDeleteRecord->setObjectName("dangerButton");
+    ui->lblResult->setObjectName("resultLabel");
 
     // Лейауты (для того, чтобы кнопки и таблицы растягивались при увеличении окна)
     // Центральный виджет
     QWidget *central = new QWidget(this);
     setCentralWidget(central);
+
     // Главный вертикальный Layout
     QVBoxLayout *mainLayout = new QVBoxLayout(central);
-    mainLayout->setSpacing(5);
-    mainLayout->setContentsMargins(5, 5, 5, 5);
+    mainLayout->setSpacing(14);
+    mainLayout->setContentsMargins(18, 18, 18, 18);
+
     // Верхняя панель (ввод)
-    QHBoxLayout *topPanel = new QHBoxLayout();
-    topPanel->addWidget(new QLabel("Порода:"));
-    topPanel->addWidget(ui->cmbSpecies);
-    topPanel->addWidget(new QLabel("Диаметр, см:"));
-    topPanel->addWidget(ui->sbDiameter);
-    topPanel->addWidget(new QLabel("Высота, м:"));
-    topPanel->addWidget(ui->sbHeight);
-    topPanel->addWidget(ui->btnCalculate);
+    QVBoxLayout *headerLayout = new QVBoxLayout();
+    QFrame *toolbarCard = new QFrame();
+    toolbarCard->setObjectName("toolbarCard");
+    QHBoxLayout *topPanel = new QHBoxLayout(toolbarCard);
+    topPanel->setSpacing(12);
+    topPanel->setContentsMargins(20, 20, 20, 20);
+    QLabel *speciesLabel = new QLabel("Порода");
+    QLabel *diameterLabel = new QLabel("Диаметр");
+    QLabel *heightLabel = new QLabel("Высота");
+    speciesLabel->setMinimumWidth(70);
+    diameterLabel->setMinimumWidth(70);
+    heightLabel->setMinimumWidth(70);
+    ui->btnCalculate->setText("Рассчитать объём");
+    ui->btnAddToReport->setText("Добавить запись");
+    ui->btnDeleteRecord->setText("Удалить запись");
+    ui->btnCalculate->setMinimumHeight(42);
+    ui->btnCalculate->setFixedWidth(250);
+    ui->btnAddToReport->setMinimumHeight(42);
+    ui->btnDeleteRecord->setMinimumHeight(42);
+    ui->cmbSpecies->setMinimumHeight(42);
+    ui->sbDiameter->setMinimumHeight(42);
+    ui->sbHeight->setMinimumHeight(42);
+    QVBoxLayout *speciesBox = new QVBoxLayout();
+    speciesBox->addWidget(speciesLabel);
+    speciesBox->addWidget(ui->cmbSpecies);
+    QVBoxLayout *diameterBox = new QVBoxLayout();
+    diameterBox->addWidget(diameterLabel);
+    diameterBox->addWidget(ui->sbDiameter);
+    QVBoxLayout *heightBox = new QVBoxLayout();
+    heightBox->addWidget(heightLabel);
+    heightBox->addWidget(ui->sbHeight);
+    topPanel->addLayout(speciesBox);
+    topPanel->addLayout(diameterBox);
+    topPanel->addLayout(heightBox);
+    //topPanel->addWidget(ui->btnCalculate);
     topPanel->addWidget(ui->lblResult);
     topPanel->addStretch();
-    mainLayout->addLayout(topPanel);
+    headerLayout->addWidget(toolbarCard);
+    mainLayout->addLayout(headerLayout);
+    topPanel->setSpacing(16);
+
+    QVBoxLayout *buttonBox = new QVBoxLayout();
+    buttonBox->addSpacing(24);
+    buttonBox->addWidget(ui->btnCalculate);
+    topPanel->addLayout(buttonBox);
+
     // Таблица
     mainLayout->addWidget(ui->tblRecords, 1);
     ui->tblRecords->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
     // Нижняя панель (кнопки + итог)
     QHBoxLayout *bottomPanel = new QHBoxLayout();
     bottomPanel->addWidget(ui->btnAddToReport);
@@ -49,26 +102,6 @@ MainWindow::MainWindow(QWidget *parent)
     bottomPanel->addStretch();
     bottomPanel->addWidget(ui->lblTotal);
     mainLayout->addLayout(bottomPanel);
-
-    // Меняем стиль
-    qApp->setStyle(QStyleFactory::create("Fusion"));
-
-    // Создаём тёмную палитру (делаем темную тему)
-    QPalette darkPalette;
-    darkPalette.setColor(QPalette::Window, QColor(53, 53, 53));
-    darkPalette.setColor(QPalette::WindowText, Qt::white);
-    darkPalette.setColor(QPalette::Base, QColor(35, 35, 35));
-    darkPalette.setColor(QPalette::AlternateBase, QColor(53, 53, 53));
-    darkPalette.setColor(QPalette::ToolTipBase, Qt::white);
-    darkPalette.setColor(QPalette::ToolTipText, Qt::white);
-    darkPalette.setColor(QPalette::Text, Qt::white);
-    darkPalette.setColor(QPalette::Button, QColor(53, 53, 53));
-    darkPalette.setColor(QPalette::ButtonText, Qt::white);
-    darkPalette.setColor(QPalette::BrightText, Qt::red);
-    darkPalette.setColor(QPalette::Link, QColor(42, 130, 218));
-    darkPalette.setColor(QPalette::Highlight, QColor(42, 130, 218));
-    darkPalette.setColor(QPalette::HighlightedText, Qt::black);
-    qApp->setPalette(darkPalette);
 
     // иконки
     ui->btnAddToReport->setIcon(QIcon(":/icons/add_.png"));
@@ -224,7 +257,11 @@ void MainWindow::updateTable() {
     // Обновляем итоговый объем и стоимость
     double totalVol = m_database.totalVolume();
     double totalCost = m_database.totalPrice();
-    ui->lblTotal->setText(QString("Общий объём: %1 м³ | Общая стоимость: %2 руб.")
+    ui->lblTotal->setText(QString(
+                              "Общий объём: <b>%1 м³</b> "
+                              "&nbsp;&nbsp;&nbsp;"
+                              "Общая стоимость: <b>%2 ₽</b>"
+                          )
                           .arg(totalVol, 0, 'f', 4)
                           .arg(totalCost, 0, 'f', 2));
 }

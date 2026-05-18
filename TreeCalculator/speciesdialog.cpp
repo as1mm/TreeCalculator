@@ -12,6 +12,8 @@ SpeciesDialog::SpeciesDialog(SpeciesDatabase *db, QWidget *parent) :
 {
     ui->setupUi(this);
 
+    setWindowTitle("Редактор пород");
+
     // Лейауты (для того, чтобы кнопки и таблицы растягивались при увеличении окна)
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->addWidget(ui->tblSpecies);
