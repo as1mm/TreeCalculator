@@ -17,3 +17,4 @@
 ## Исходный код
 - Папка **TreeCalculator** - это проект на фреймворке QT со всеми исходными файлами.
 - Zip-файл **TreeCalculator_v1.0** - файл с готовым приложением .exe-файлом.
+- Отчёт - https://disk.yandex.ru/i/dV8zqWM5C-HmMQ.
